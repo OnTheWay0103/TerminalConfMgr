@@ -81,6 +81,142 @@ setup_backup_dir() {
     mkdir -p "$BACKUP_DIR" 2>/dev/null || error_exit "无法创建备份目录: $BACKUP_DIR"
 }
 
+# 创建 .gitignore 文件
+create_gitignore() {
+    local gitignore_file="${HOME}/.gitignore"
+    
+    if [ ! -f "$gitignore_file" ]; then
+        log "创建 .gitignore 文件..." "INFO"
+        cat > "$gitignore_file" << 'EOF'
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+\#*#
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 备份文件
+*.bak
+*.backup
+*.old
+*.orig
+
+# 缓存文件
+.cache/
+*.cache
+
+# 编译文件
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+.brackets.json
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ruby
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Rust
+/target/
+Cargo.lock
+
+# 用户输入文件
+userinput.py
+
+# dotconfEx 相关文件
+.dotconf.log
+.dotconf_backups/
+.dotfiles/
+
+# 其他
+*.pid
+*.seed
+*.pid.lock
+EOF
+        dotf add "$gitignore_file" 2>/dev/null || true
+        log "✅ .gitignore 文件已创建" "SUCCESS"
+    else
+        log "ℹ️ .gitignore 文件已存在" "INFO"
+    fi
+}
+
 # 清理旧备份
 cleanup_old_backups() {
     local max_backups=10
@@ -141,6 +277,9 @@ init_repo() {
     # 初始化跟踪
     if command -v dotf >/dev/null 2>&1; then
         dotf config --local status.showUntrackedFiles no || true
+        
+        # 创建 .gitignore 文件
+        create_gitignore
         
         # 添加常见配置文件
         local config_files=(.zshrc .zshrc_custom .bashrc .bash_profile .vimrc .gitconfig)
