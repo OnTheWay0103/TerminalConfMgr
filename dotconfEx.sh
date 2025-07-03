@@ -146,7 +146,7 @@ init_repo() {
         log "已设置 status.showUntrackedFiles no，dotf status 只显示已跟踪文件" "INFO"
         
         # 添加常见配置文件
-        local config_files=(.zshrc .zshrc_custom .bashrc .bash_profile .vimrc .gitconfig)
+        local config_files=(.zshrc .zprofile .zshrc_custom .bashrc .bash_profile .vimrc .gitconfig)
         for file in "${config_files[@]}"; do
             if [ -f "${HOME}/${file}" ]; then
                 dotf add "$file" 2>/dev/null || true
