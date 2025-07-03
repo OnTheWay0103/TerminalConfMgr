@@ -72,7 +72,6 @@ sudo mv dotconfEx.sh /usr/local/bin/dotconf
 - 创建 Git bare repository (`~/.dotfiles`)
 - 设置 `dotf` 别名
 - 自动添加到 shell 配置文件
-- 创建 `.gitignore` 文件（忽略系统文件和临时文件）
 - 初始化跟踪常见配置文件
 
 ### 2. 添加配置文件
@@ -134,16 +133,21 @@ dotf remote add origin https://github.com/username/dotfiles.git
 
 ### .gitignore 文件
 
-工具会在初始化时自动创建 `.gitignore` 文件，忽略以下类型的文件：
+本项目包含两个 `.gitignore` 文件，服务于不同的目的：
 
-- 系统文件（.DS_Store, Thumbs.db 等）
-- 临时文件和缓存文件
-- 日志文件和备份文件
-- IDE 和编辑器配置文件
-- 各种编程语言的编译文件和依赖
-- dotconfEx 自身的日志和备份文件
+#### 1. 项目仓库 .gitignore
 
-这样可以确保只有重要的配置文件被版本控制，避免仓库被不必要的文件污染。
+- **位置**: `TerminalConfigMgr/.gitignore`
+- **作用**: 管理 dotconfEx.sh 工具本身的代码仓库
+- **忽略内容**: 工具的日志文件、临时文件、IDE 配置等
+
+#### 2. 用户目录 .gitignore
+
+- **位置**: `~/.gitignore`（用户主目录）
+- **作用**: 管理用户的 dotfiles 仓库
+- **忽略内容**: 由用户自定义，通常包括系统文件、临时文件、缓存文件等
+
+**注意**: 用户目录的 `.gitignore` 文件需要用户自己创建和管理，作为 dotfiles 的一部分。工具不会自动创建此文件。
 
 ## 📝 使用示例
 
