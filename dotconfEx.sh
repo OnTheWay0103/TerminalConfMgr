@@ -1,9 +1,12 @@
-#!/usr/bin/env bash
-# Terminal Configuration Manager v2.0 - Cross-Platform Dotfiles Sync
+#!/usr/bin/env zsh
+# Terminal Configuration Manager v2.2 - Cross-Platform Dotfiles Sync
+# 使用zsh解释器确保最佳兼容性
 # Usage: 
-#   init    : Initialize config repo
+#   init    : Initialize config repo with .gitignore
 #   sync    : Push changes to remote
 #   migrate : Set up on new machine
+#   add     : Add file to tracking
+#   remove  : Remove file from tracking
 #   backup  : Create snapshot of current config
 #   clean   : Clean up old backups
 #   status  : Show current status
@@ -15,7 +18,7 @@ DOTFILES_REPO="${DOTFILES_DIR:-$HOME/.dotfiles}"
 CONFIG_PROFILE="${HOME}/.zshrc_custom"  # Master config file
 LOG_FILE="${HOME}/.dotconf.log"
 BACKUP_DIR="${HOME}/.dotconf_backups"
-VERSION="2.0"
+VERSION="2.2"
 
 # 颜色定义
 RED='\033[0;31m'
@@ -96,6 +99,185 @@ cleanup_old_backups() {
     fi
 }
 
+# 创建.gitignore文件来忽略不需要的文件
+create_gitignore() {
+    local gitignore_file="${HOME}/.gitignore"
+    local backup_file="${HOME}/.gitignore.backup.$(date +%Y%m%d_%H%M%S)"
+    
+    # 检查是否已存在.gitignore文件
+    if [ -f "$gitignore_file" ]; then
+        log "⚠️ 发现已存在的 .gitignore 文件" "WARN"
+        echo -e "${YELLOW}发现已存在的 .gitignore 文件${NC}"
+        echo "选择操作:"
+        echo "1) 备份现有文件并创建新的dotconf .gitignore"
+        echo "2) 在现有文件中添加dotconf规则"
+        echo "3) 跳过.gitignore创建"
+        echo "4) 取消操作"
+        
+        read -p "请选择 (1-4): " choice
+        
+        case $choice in
+            1)
+                # 备份并创建新的
+                cp "$gitignore_file" "$backup_file"
+                log "📦 已备份现有 .gitignore 到: $backup_file" "INFO"
+                create_dotconf_gitignore "$gitignore_file"
+                ;;
+            2)
+                # 在现有文件中添加规则
+                append_dotconf_rules "$gitignore_file"
+                ;;
+            3)
+                log "⏭️ 跳过 .gitignore 创建" "INFO"
+                return 0
+                ;;
+            4)
+                log "❌ 用户取消操作" "INFO"
+                return 1
+                ;;
+            *)
+                log "❌ 无效选择，跳过 .gitignore 创建" "WARN"
+                return 0
+                ;;
+        esac
+    else
+        # 文件不存在，直接创建
+        create_dotconf_gitignore "$gitignore_file"
+    fi
+}
+
+# 创建完整的dotconf .gitignore文件
+create_dotconf_gitignore() {
+    local gitignore_file="$1"
+    
+    cat > "$gitignore_file" << 'EOF'
+# ========================================
+# Dotconf - Terminal Configuration Manager
+# ========================================
+# 此文件由 dotconfEx.sh 自动生成
+# 生成时间: $(date)
+
+# 忽略所有文件，只跟踪特定的配置文件
+*
+
+# 允许跟踪的配置文件
+!.zshrc
+!.zshrc_custom
+!.bashrc
+!.bash_profile
+!.bash_aliases
+!.profile
+!.zprofile
+!.gitconfig
+!.vimrc
+!.gitignore
+!.config/
+!.ssh/config
+!.ssh/known_hosts
+
+# 忽略常见的非配置文件
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+
+# 忽略应用程序数据
+Applications/
+Library/
+Downloads/
+Documents/
+Desktop/
+Movies/
+Music/
+Pictures/
+Public/
+
+# 忽略开发工具文件
+node_modules/
+.vscode/
+.idea/
+*.pyc
+__pycache__/
+.env
+.env.local
+
+# 忽略系统文件
+.cache/
+.local/
+.config/google-chrome/
+.config/Code/
+.config/JetBrains/
+.config/spotify/
+.config/discord/
+
+# 忽略临时文件
+/tmp/
+/var/tmp/
+*.tmp
+*.temp
+EOF
+
+    log "✅ 已创建新的 .gitignore 文件" "SUCCESS"
+}
+
+# 在现有.gitignore文件中添加dotconf规则
+append_dotconf_rules() {
+    local gitignore_file="$1"
+    local marker="# ========================================"
+    local marker2="# Dotconf - Terminal Configuration Manager"
+    
+    # 检查是否已经包含dotconf规则
+    if grep -q "$marker" "$gitignore_file"; then
+        log "ℹ️ .gitignore 文件已包含 dotconf 规则" "INFO"
+        return 0
+    fi
+    
+    # 添加dotconf规则到文件末尾
+    cat >> "$gitignore_file" << 'EOF'
+
+# ========================================
+# Dotconf - Terminal Configuration Manager
+# ========================================
+# 此部分由 dotconfEx.sh 自动添加
+# 添加时间: $(date)
+
+# 如果前面没有全局忽略规则，添加以下规则
+# 注意：这些规则可能会影响其他项目，请根据需要调整
+
+# 忽略应用程序数据（如果不在其他项目中）
+Applications/
+Library/
+Downloads/
+Documents/
+Desktop/
+Movies/
+Music/
+Pictures/
+Public/
+
+# 忽略系统文件
+.cache/
+.local/
+.config/google-chrome/
+.config/Code/
+.config/JetBrains/
+.config/spotify/
+.config/discord/
+
+# 忽略临时文件
+/tmp/
+/var/tmp/
+*.tmp
+*.temp
+EOF
+
+    log "✅ 已在现有 .gitignore 文件中添加 dotconf 规则" "SUCCESS"
+    log "⚠️ 请检查规则是否与您的其他项目冲突" "WARN"
+}
+
 init_repo() {
     log "开始初始化dotfiles仓库..." "INFO"
     
@@ -132,33 +314,63 @@ init_repo() {
     if [ "$updated_profiles" -eq 0 ]; then
         log "⚠️ 未找到可更新的shell配置文件" "WARN"
     fi
-
+    
     # 重新加载shell配置
-    if [ -f "${HOME}/.zshrc" ]; then
-        source "${HOME}/.zshrc" 2>/dev/null || true
-    elif [ -f "${HOME}/.bashrc" ]; then
-        source "${HOME}/.bashrc" 2>/dev/null || true
+    if [ -n "${ZSH_VERSION:-}" ]; then
+        # zsh环境：优先.zshrc，回退到.bashrc
+        if [ -f "${HOME}/.zshrc" ]; then
+            source "${HOME}/.zshrc" 2>/dev/null || true
+        elif [ -f "${HOME}/.bashrc" ]; then
+            source "${HOME}/.bashrc" 2>/dev/null || true
+        fi
+    elif [ -n "${BASH_VERSION:-}" ]; then
+        # bash环境：只加载.bashrc
+        if [ -f "${HOME}/.bashrc" ]; then
+            source "${HOME}/.bashrc" 2>/dev/null || true
+        fi
     fi
-
     # 初始化跟踪
     if command -v dotf >/dev/null 2>&1; then
+        # 创建.gitignore文件
+        create_gitignore
+        
+        # 设置git配置
         dotf config --local status.showUntrackedFiles no || true
+        dotf config --local core.excludesfile ~/.gitignore || true
         log "已设置 status.showUntrackedFiles no，dotf status 只显示已跟踪文件" "INFO"
         
-        # 添加常见配置文件
-        local config_files=(.zshrc .zprofile .zshrc_custom .bashrc .bash_profile .vimrc .gitconfig)
+        # 添加.gitignore文件
+        dotf add .gitignore 2>/dev/null || true
+        
+        # 添加常见配置文件（只添加存在的文件）
+        local config_files=(.zshrc .zprofile .zshrc_custom .bashrc .bash_profile .bash_aliases .vimrc .gitconfig)
+        local added_files=0
+        
         for file in "${config_files[@]}"; do
             if [ -f "${HOME}/${file}" ]; then
                 dotf add "$file" 2>/dev/null || true
+                log "➕ 已添加配置文件: $file" "SUCCESS"
+                ((added_files++))
             fi
         done
         
         # 创建主配置文件
-        echo "# Dotfiles Configuration - $(date)" > "${CONFIG_PROFILE}"
+        if [ ! -f "${CONFIG_PROFILE}" ]; then
+            echo "# Dotfiles Configuration - $(date)" > "${CONFIG_PROFILE}"
+            log "➕ 已创建主配置文件: ${CONFIG_PROFILE}" "SUCCESS"
+        fi
         dotf add "${CONFIG_PROFILE}" 2>/dev/null || true
+        
+        # 添加.config目录下的重要配置文件
+        if [ -d "${HOME}/.config" ]; then
+            # 只添加.config目录本身，让.gitignore控制具体文件
+            dotf add .config/ 2>/dev/null || true
+            log "➕ 已添加 .config 目录" "SUCCESS"
+        fi
         
         if dotf commit -m "🎉 初始提交 - $(date)" >/dev/null 2>&1; then
             log "✅ 初始提交成功" "SUCCESS"
+            log "📝 已跟踪 $added_files 个配置文件" "INFO"
         else
             log "⚠️ 初始提交失败（可能没有文件需要提交）" "WARN"
         fi
@@ -168,6 +380,7 @@ init_repo() {
     
     log "✅ Dotfiles仓库已初始化: ${DOTFILES_REPO}" "SUCCESS"
     log "💡 开始添加文件: dotf add <file>" "INFO"
+    log "📋 使用 'dotf status' 查看当前状态" "INFO"
 }
 
 sync_changes() {
@@ -181,7 +394,7 @@ sync_changes() {
         return 0
     fi
 
-    # 提交所有更改的文件
+    # 只提交已跟踪文件的更改，不添加新文件
     dotf add -u 2>/dev/null || true
     
     local commit_msg="🔄 自动同步: $(date +'%Y-%m-%d %H:%M:%S')"
@@ -229,13 +442,13 @@ migrate_config() {
     check_dependencies
     
     # 安装必要的包
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "${OSTYPE:-}" == "darwin"* ]]; then
         if command -v brew >/dev/null 2>&1; then
             brew install git tree >/dev/null 2>&1 || log "⚠️ 包安装可能失败" "WARN"
         else
             log "⚠️ Homebrew未安装" "WARN"
         fi
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    elif [[ "${OSTYPE:-}" == "linux-gnu"* ]]; then
         if command -v apt-get >/dev/null 2>&1; then
             sudo apt-get update >/dev/null 2>&1 || log "⚠️ apt更新失败" "WARN"
             sudo apt-get install -y git tree >/dev/null 2>&1 || log "⚠️ 包安装可能失败" "WARN"
@@ -404,21 +617,119 @@ show_help() {
     echo "  init     设置dotfiles仓库"
     echo "  sync     提交并推送配置更改"
     echo "  migrate  克隆配置到新机器"
+    echo "  add      添加文件到跟踪"
+    echo "  remove   从跟踪中移除文件"
+    echo "  restore  恢复.gitignore备份"
     echo "  backup   创建手动备份"
     echo "  clean    清理旧备份文件"
     echo "  status   显示当前状态"
     echo "  help     显示此帮助信息"
     echo ""
     echo "使用示例:"
-    echo "1. $0 init           # 首次设置"
-    echo "2. dotf add ~/.config/file # 添加新配置"
-    echo "3. $0 sync           # 推送更改"
-    echo "4. $0 migrate <URL>  # 在新机器上"
-    echo "5. $0 status         # 查看状态"
+    echo "1. $0 init                    # 首次设置"
+    echo "2. $0 add .config/nvim/init.vim  # 添加新配置文件"
+    echo "3. $0 remove .config/file     # 移除不需要的文件"
+    echo "4. $0 restore                 # 恢复.gitignore备份"
+    echo "5. $0 sync                    # 推送更改"
+    echo "6. $0 migrate <URL>           # 在新机器上"
+    echo "7. $0 status                  # 查看状态"
+    echo ""
+    echo "文件管理:"
+    echo "  - 使用 .gitignore 控制跟踪的文件"
+    echo "  - 只跟踪重要的配置文件"
+    echo "  - 使用 'dotf status' 查看当前状态"
+    echo "  - 自动备份现有 .gitignore 文件"
+    echo "  - 使用 'restore' 命令恢复备份"
     echo ""
     echo "环境变量:"
     echo "  DOTFILES_DIR    自定义dotfiles仓库路径"
     echo ""
+}
+
+# 添加新文件到跟踪
+add_file() {
+    local file_path="$1"
+    
+    if [ -z "$file_path" ]; then
+        error_exit "缺少文件路径。用法: $0 add <file-path>"
+    fi
+    
+    check_dotf_command
+    
+    # 检查文件是否存在
+    if [ ! -f "${HOME}/${file_path}" ]; then
+        error_exit "文件不存在: ${HOME}/${file_path}"
+    fi
+    
+    # 添加文件到跟踪
+    if dotf add "$file_path" 2>/dev/null; then
+        log "✅ 已添加文件到跟踪: $file_path" "SUCCESS"
+        log "💡 使用 'dotf commit -m \"消息\"' 提交更改" "INFO"
+    else
+        error_exit "添加文件失败: $file_path"
+    fi
+}
+
+# 从跟踪中移除文件
+remove_file() {
+    local file_path="$1"
+    
+    if [ -z "$file_path" ]; then
+        error_exit "缺少文件路径。用法: $0 remove <file-path>"
+    fi
+    
+    check_dotf_command
+    
+    # 从跟踪中移除文件
+    if dotf rm --cached "$file_path" 2>/dev/null; then
+        log "✅ 已从跟踪中移除文件: $file_path" "SUCCESS"
+        log "💡 使用 'dotf commit -m \"消息\"' 提交更改" "INFO"
+    else
+        error_exit "移除文件失败: $file_path"
+    fi
+}
+
+# 恢复.gitignore备份
+restore_gitignore() {
+    local backup_pattern="${HOME}/.gitignore.backup.*"
+    local backup_files=()
+    
+    # 查找所有备份文件
+    while IFS= read -r -d '' file; do
+        backup_files+=("$file")
+    done < <(find "${HOME}" -name ".gitignore.backup.*" -type f -print0 2>/dev/null)
+    
+    if [ ${#backup_files[@]} -eq 0 ]; then
+        log "ℹ️ 没有找到 .gitignore 备份文件" "INFO"
+        return 0
+    fi
+    
+    echo -e "${BLUE}找到以下备份文件:${NC}"
+    for i in "${!backup_files[@]}"; do
+        local filename=$(basename "${backup_files[$i]}")
+        local timestamp=$(echo "$filename" | sed 's/\.gitignore\.backup\.//')
+        echo "$((i+1))) $filename ($timestamp)"
+    done
+    
+    read -p "请选择要恢复的备份文件 (1-${#backup_files[@]}): " choice
+    
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#backup_files[@]} ]; then
+        local selected_backup="${backup_files[$((choice-1))]}"
+        local current_gitignore="${HOME}/.gitignore"
+        
+        # 备份当前文件（如果存在）
+        if [ -f "$current_gitignore" ]; then
+            local current_backup="${HOME}/.gitignore.current.$(date +%Y%m%d_%H%M%S)"
+            cp "$current_gitignore" "$current_backup"
+            log "📦 已备份当前 .gitignore 到: $current_backup" "INFO"
+        fi
+        
+        # 恢复选中的备份
+        cp "$selected_backup" "$current_gitignore"
+        log "✅ 已恢复 .gitignore 备份: $(basename "$selected_backup")" "SUCCESS"
+    else
+        log "❌ 无效选择，取消恢复" "WARN"
+    fi
 }
 
 # 主命令路由器
@@ -441,6 +752,21 @@ main() {
                 error_exit "缺少Git URL。用法: $0 migrate <git-repo-url>"
             fi
             migrate_config "$2"
+            ;;
+        add)
+            if [ -z "${2:-}" ]; then
+                error_exit "缺少文件路径。用法: $0 add <file-path>"
+            fi
+            add_file "$2"
+            ;;
+        remove)
+            if [ -z "${2:-}" ]; then
+                error_exit "缺少文件路径。用法: $0 remove <file-path>"
+            fi
+            remove_file "$2"
+            ;;
+        restore)
+            restore_gitignore
             ;;
         backup)
             create_backup
