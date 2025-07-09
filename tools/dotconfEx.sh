@@ -282,6 +282,43 @@ EOF
 
 # 创建基础配置
 create_base_configs() {
+    # 获取脚本所在目录
+    local script_dir="$(get_script_dir)"
+    local templates_dir="${script_dir}/../templates"
+    
+    # 检查模板目录是否存在
+    if [ ! -d "$templates_dir" ]; then
+        log "⚠️ 模板目录不存在: $templates_dir" "WARN"
+        log "使用内置模板创建基础配置" "INFO"
+        create_builtin_configs
+        return
+    fi
+    
+    # 从模板目录复制配置文件
+    local config_files=(
+        "zshrc.example:.zshrc"
+        "zshrc_custom.example:.zshrc_custom"
+        "gitconfig.example:.gitconfig"
+        "vimrc.example:.vimrc"
+    )
+    
+    for config_pair in "${config_files[@]}"; do
+        local template_file="${config_pair%%:*}"
+        local target_file="${config_pair##*:}"
+        
+        if [ -f "${templates_dir}/${template_file}" ]; then
+            cp "${templates_dir}/${template_file}" "${DOTFILES_REPO}/${target_file}"
+            log "📋 已从模板创建: ${target_file}" "SUCCESS"
+        else
+            log "⚠️ 模板文件不存在: ${template_file}" "WARN"
+        fi
+    done
+    
+    log "✅ 已从模板创建基础配置" "SUCCESS"
+}
+
+# 创建内置配置（备用方案）
+create_builtin_configs() {
     cat > .zshrc << 'EOF'
 # Zsh Configuration
 export LANG=en_US.UTF-8
@@ -363,7 +400,7 @@ set background=dark
 colorscheme default
 EOF
 
-    log "✅ 已创建基础配置" "SUCCESS"
+    log "✅ 已创建内置基础配置" "SUCCESS"
 }
 
 # 创建符号链接
@@ -371,7 +408,11 @@ create_symlinks() {
     local files=(.zshrc .zshrc_custom .gitconfig .vimrc)
     
     for file in "${files[@]}"; do
-        if [ -f "${DOTFILES_REPO}/${file}" ]; then
+        # 优先使用 configs/ 目录下的配置文件
+        if [ -f "${DOTFILES_REPO}/configs/${file}" ]; then
+            create_symlink "${DOTFILES_REPO}/configs/${file}" "${HOME}/${file}"
+        elif [ -f "${DOTFILES_REPO}/${file}" ]; then
+            # 回退到根目录下的文件
             create_symlink "${DOTFILES_REPO}/${file}" "${HOME}/${file}"
         fi
     done
