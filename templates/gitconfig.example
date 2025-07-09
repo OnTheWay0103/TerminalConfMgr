@@ -1,0 +1,18 @@
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	di = diff
+    gac="git add . && git commit -m"
+[core]
+	quotepath = false
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = true
+[user]
+	name = OnTheWay0103
+	email = OnTheWay0607@gmail.com

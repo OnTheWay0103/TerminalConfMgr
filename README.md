@@ -1,247 +1,226 @@
 # Terminal Configuration Manager (dotconfEx)
 
-一个简单易用的跨平台终端配置文件管理工具，基于 Git bare repository 实现，支持配置文件的版本控制、同步和备份。
+一个简单易用的跨平台配置文件同步工具，采用**单仓库设计**，帮助您在多台电脑间保持配置文件一致。参考了 [Mathias Bynens dotfiles](https://github.com/mathiasbynens/dotfiles) 的设计理念。
 
-## 🚀 特性
+## 🎯 设计理念
 
-- **跨平台支持**: 支持 macOS 和 Linux 系统
-- **Git 版本控制**: 使用 Git bare repository 管理配置文件
-- **自动备份**: 支持本地备份和远程同步
-- **简单易用**: 提供简洁的命令行接口
-- **日志记录**: 详细的操作日志和错误处理
-- **智能清理**: 自动清理旧备份文件
+**单仓库设计** - 只需要一个 Git 仓库管理所有配置文件，通过符号链接自动管理，大大简化了使用复杂度。
 
-## 📋 系统要求
+## 功能特点
 
-- Git
-- tar
-- bash shell
-- 支持的系统: macOS, Linux
+- 🚀 **单仓库管理**: 只需要一个仓库，简化使用
+- 🔗 **自动符号链接**: 自动创建和管理符号链接
+- 🔄 **智能同步**: 支持本地到远程的自动同步
+- 🛡️ **冲突处理**: 智能处理多设备间的配置冲突
+- 📦 **备份恢复**: 自动备份和恢复功能
+- 🎨 **配置模板**: 提供常用配置文件模板
+- 🌐 **跨平台**: 支持 macOS 和 Linux
 
-## 🛠️ 安装
+## 快速开始
 
-1. 下载脚本到本地：
+### 1. 一键安装
 
 ```bash
-curl -o dotconfEx.sh https://raw.githubusercontent.com/your-repo/dotconfEx.sh
+# 下载并运行安装脚本
+curl -fsSL https://raw.githubusercontent.com/your-repo/dotconfEx.sh/main/install.sh | bash
 ```
 
-2. 添加执行权限：
+或者手动安装：
 
 ```bash
+# 下载脚本
+curl -o dotconfEx.sh https://raw.githubusercontent.com/your-repo/dotconfEx.sh/main/dotconfEx.sh
 chmod +x dotconfEx.sh
+
+# 运行安装
+./install.sh
 ```
 
-3. 移动到系统 PATH 中（可选）：
+### 2. 首次设置
 
 ```bash
-sudo mv dotconfEx.sh /usr/local/bin/dotconf
+dotconf init
 ```
 
-## 📖 使用方法
+脚本会引导您：
 
-### 基本命令
+- 创建本地 dotfiles 仓库
+- 配置远程仓库（可选）
+- 创建基础配置文件
+- 自动创建符号链接
+
+### 3. 在新机器上同步
 
 ```bash
-./dotconfEx.sh <command> [options]
+dotconf migrate <your-repo-url>
 ```
 
-### 命令列表
+## 常用命令
 
-| 命令      | 描述                 | 用法                               |
-| --------- | -------------------- | ---------------------------------- |
-| `init`    | 初始化 dotfiles 仓库 | `./dotconfEx.sh init`              |
-| `sync`    | 同步配置更改到远程   | `./dotconfEx.sh sync`              |
-| `migrate` | 在新机器上设置配置   | `./dotconfEx.sh migrate <git-url>` |
-| `backup`  | 创建手动备份         | `./dotconfEx.sh backup`            |
-| `clean`   | 清理旧备份文件       | `./dotconfEx.sh clean`             |
-| `status`  | 显示当前状态         | `./dotconfEx.sh status`            |
-| `help`    | 显示帮助信息         | `./dotconfEx.sh help`              |
+| 命令            | 说明                   |
+| --------------- | ---------------------- |
+| `init`          | 初始化 dotfiles 仓库   |
+| `sync`          | 同步配置更改到远程仓库 |
+| `migrate <URL>` | 在新机器上克隆配置     |
+| `add <file>`    | 添加文件到跟踪         |
+| `remove <file>` | 从跟踪中移除文件       |
+| `status`        | 显示当前状态           |
 
-## 🎯 快速开始
+## 使用场景
 
-### 1. 首次设置
+### 场景 1: 首次设置
 
 ```bash
-# 初始化dotfiles仓库
-./dotconfEx.sh init
+# 1. 初始化仓库
+dotconf init
+
+# 2. 添加更多配置文件
+dotconf add .config/nvim/init.vim
+dotconf add .tmux.conf
+
+# 3. 同步到远程
+dotconf sync
 ```
 
-这将：
-
-- 创建 Git bare repository (`~/.dotfiles`)
-- 设置 `dotf` 别名
-- 自动添加到 shell 配置文件
-- 初始化跟踪常见配置文件
-
-### 2. 添加配置文件
+### 场景 2: 新机器配置
 
 ```bash
-# 添加新的配置文件
-dotf add ~/.config/nvim/init.vim
-dotf add ~/.tmux.conf
+# 1. 克隆配置
+dotconf migrate https://github.com/username/dotfiles.git
 
-# 提交更改
-dotf commit -m "添加nvim和tmux配置"
+# 2. 检查状态
+dotconf status
 ```
 
-### 3. 同步到远程仓库
+### 场景 3: 日常使用
 
 ```bash
-# 添加远程仓库
-dotf remote add origin https://github.com/username/dotfiles.git
+# 1. 修改配置文件后同步
+dotconf sync
 
-# 同步更改
-./dotconfEx.sh sync
+# 2. 添加新配置
+dotconf add .config/alacritty/alacritty.yml
+dotconf sync
 ```
 
-### 4. 在新机器上迁移配置
+## 工作原理
 
-```bash
-# 克隆配置到新机器
-./dotconfEx.sh migrate https://github.com/username/dotfiles.git
-```
-
-## 📁 文件结构
+### 单仓库设计
 
 ```
-~/
-├── .dotfiles/              # Git bare repository
-├── .zshrc_custom          # 主配置文件
-├── .dotconf.log           # 日志文件
-└── .dotconf_backups/      # 备份目录
-    ├── dotconf_20231201_143022.tar.gz
-    └── dotconf_manual_20231201_150000.tar.gz
+~/.dotfiles/           # Git 仓库
+├── .zshrc            # 配置文件
+├── .gitconfig        # Git 配置
+├── .vimrc            # Vim 配置
+└── .config/          # 配置目录
+    └── nvim/
+        └── init.vim
+
+~/.zshrc -> ~/.dotfiles/.zshrc        # 符号链接
+~/.gitconfig -> ~/.dotfiles/.gitconfig # 符号链接
+~/.vimrc -> ~/.dotfiles/.vimrc        # 符号链接
 ```
 
-## 🔧 配置说明
+### 优势
 
-### 环境变量
+1. **简单直观**: 只需要一个仓库管理所有配置
+2. **自动管理**: 符号链接自动创建和维护
+3. **版本控制**: 所有配置都在 Git 版本控制下
+4. **易于同步**: 简单的 push/pull 操作
+5. **冲突处理**: 自动检测和处理冲突
+
+## 支持的配置文件
+
+- Shell 配置: `.zshrc`, `.bashrc`, `.bash_profile`
+- 编辑器配置: `.vimrc`, `.config/nvim/init.vim`
+- 终端配置: `.tmux.conf`, `.config/alacritty/`
+- Git 配置: `.gitconfig`
+- 其他: `.ssh/config`, `.config/` 目录下的配置
+
+## 环境变量
 
 - `DOTFILES_DIR`: 自定义 dotfiles 仓库路径（默认: `~/.dotfiles`）
 
-### 自动跟踪的配置文件
+## 故障排除
 
-工具会自动跟踪以下配置文件：
-
-- `.zshrc`
-- `.zshrc_custom`
-- `.bashrc`
-- `.bash_profile`
-- `.vimrc`
-- `.gitconfig`
-
-### .gitignore 文件
-
-本项目包含两个 `.gitignore` 文件，服务于不同的目的：
-
-#### 1. 项目仓库 .gitignore
-
-- **位置**: `TerminalConfigMgr/.gitignore`
-- **作用**: 管理 dotconfEx.sh 工具本身的代码仓库
-- **忽略内容**: 工具的日志文件、临时文件、IDE 配置等
-
-#### 2. 用户目录 .gitignore
-
-- **位置**: `~/.gitignore`（用户主目录）
-- **作用**: 管理用户的 dotfiles 仓库
-- **忽略内容**: 由用户自定义，通常包括系统文件、临时文件、缓存文件等
-
-**注意**: 用户目录的 `.gitignore` 文件需要用户自己创建和管理，作为 dotfiles 的一部分。工具不会自动创建此文件。
-
-## 📝 使用示例
-
-### 完整工作流程
+### 问题 1: 符号链接问题
 
 ```bash
-# 1. 初始化
-./dotconfEx.sh init
+# 检查符号链接
+ls -la ~/.zshrc
 
-# 2. 添加配置文件
-dotf add ~/.config/alacritty/alacritty.yml
-dotf add ~/.config/starship.toml
-
-# 3. 提交更改
-dotf commit -m "添加终端和提示符配置"
-
-# 4. 设置远程仓库
-dotf remote add origin https://github.com/username/dotfiles.git
-
-# 5. 同步到远程
-./dotconfEx.sh sync
-
-# 6. 查看状态
-./dotconfEx.sh status
+# 重新创建符号链接
+dotconf init
 ```
 
-### 备份和恢复
+### 问题 2: 同步冲突
 
 ```bash
-# 创建手动备份
-./dotconfEx.sh backup
+# 1. 查看冲突状态
+cd ~/.dotfiles
+git status
 
-# 清理旧备份
-./dotconfEx.sh clean
-
-# 查看备份状态
-ls -la ~/.dotconf_backups/
+# 2. 手动解决冲突后
+git add .
+git commit -m "解决冲突"
+dotconf sync
 ```
 
-## ⚠️ 注意事项
+### 问题 3: 远程仓库连接失败
 
-1. **首次使用**: 运行 `init` 命令后需要重新加载 shell 或重启终端
-2. **远程仓库**: 建议设置远程仓库以便在多台机器间同步
-3. **备份策略**: 工具会自动保留最近 10 个备份文件
-4. **权限问题**: 确保对相关目录有读写权限
-5. **冲突处理**: 在迁移配置时，现有文件会被覆盖
+```bash
+# 检查远程仓库配置
+cd ~/.dotfiles
+git remote -v
 
-## 🐛 故障排除
+# 重新配置远程仓库
+git remote remove origin
+git remote add origin <your-repo-url>
+```
 
-### 常见问题
+## 与 Mathias Bynens dotfiles 的对比
 
-1. **dotf 命令不可用**
+| 特性     | Mathias dotfiles | dotconfEx (单仓库)    |
+| -------- | ---------------- | --------------------- |
+| 安装方式 | bootstrap.sh     | install.sh + 一键安装 |
+| 文件组织 | 直接管理         | 单仓库 + 符号链接     |
+| 同步机制 | 手动更新         | 自动同步              |
+| 复杂度   | 中等             | 简单                  |
+| 学习曲线 | 较陡             | 平缓                  |
 
-   ```bash
-   # 重新加载shell配置
-   source ~/.zshrc
-   # 或重启终端
-   ```
+## 设计优势
 
-2. **权限错误**
+### 跨平台兼容性
 
-   ```bash
-   # 检查目录权限
-   ls -la ~/.dotfiles/
-   # 修复权限
-   chmod 755 ~/.dotfiles/
-   ```
+| 特性       | 支持情况                    | 说明           |
+| ---------- | --------------------------- | -------------- |
+| Shell 环境 | bash, zsh                   | 自动检测并适配 |
+| 操作系统   | macOS, Linux, Windows (WSL) | 跨平台兼容     |
+| 配置文件   | 自动检测 .zshrc/.bashrc     | 智能配置 PATH  |
+| 权限处理   | 自动降级到用户目录          | 避免权限问题   |
 
-3. **Git 配置问题**
-   ```bash
-   # 检查Git配置
-   dotf config --list
-   # 设置用户信息
-   dotf config user.name "Your Name"
-   dotf config user.email "your.email@example.com"
-   ```
+### 相比 Bare Git 仓库方案
 
-## 📄 许可证
+| 方面       | Bare Git 仓库        | 单仓库设计 |
+| ---------- | -------------------- | ---------- |
+| 仓库数量   | 2 个 (bare + remote) | 1 个       |
+| 配置复杂度 | 高                   | 低         |
+| 学习成本   | 高                   | 低         |
+| 维护难度   | 高                   | 低         |
+| 直观性     | 低                   | 高         |
 
-本项目采用 MIT 许可证。
+### 相比传统方案
 
-## 🤝 贡献
+- ✅ **简单**: 只需要一个仓库
+- ✅ **直观**: 文件组织清晰
+- ✅ **自动**: 符号链接自动管理
+- ✅ **安全**: 自动备份原文件
+- ✅ **灵活**: 支持任意配置文件
+
+## 贡献
 
 欢迎提交 Issue 和 Pull Request！
 
-## 📞 支持
+## 许可证
 
-如果遇到问题，请：
-
-1. 查看日志文件: `~/.dotconf.log`
-2. 运行状态检查: `./dotconfEx.sh status`
-3. 提交 Issue 到项目仓库
-
----
-
-**版本**: 2.0  
-**最后更新**: 2024 年 12 月
+MIT License
