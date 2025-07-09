@@ -123,13 +123,132 @@ init_repo() {
     
     # 创建.gitignore
     cat > .gitignore << 'EOF'
-*.backup.*
-*.log
+# 系统文件
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*~
+
+# 临时文件
+*.tmp
+*.temp
 *.swp
 *.swo
+*~
+.#*
+\#*#
+
+# 日志文件
+*.log
+logs/
+log/
+
+# 备份文件
+*.bak
+*.backup
+*.old
+*.orig
+
+# 缓存文件
+.cache/
+*.cache
+
+# 编译文件
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+.brackets.json
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ruby
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Rust
+/target/
+Cargo.lock
+
+# 用户输入文件（根据用户规则）
+userinput.py
+
+# dotconfEx 相关文件
+.dotconf.log
+.dotconf_backups/
+.dotfiles/
+
+# 用户自定义配置（可选）
+# 如果用户想要跟踪自己的配置文件，可以取消注释
+# configs/.zshrc_custom
+# configs/.gitconfig_local
+
+# 其他
+*.pid
+*.seed
+*.pid.lock 
 EOF
     
     # 询问远程仓库
@@ -315,7 +434,7 @@ sync_changes() {
         
         if [ "$local_commit" != "$remote_commit" ] && [ -n "$remote_commit" ]; then
             log "🔄 合并远程更改..." "INFO"
-            if git merge origin/main --no-edit; then
+            if git merge origin/main --allow-unrelated-histories --no-edit; then
                 log "✅ 远程更改已合并" "SUCCESS"
             else
                 log "⚠️ 合并冲突，请手动解决" "WARN"
