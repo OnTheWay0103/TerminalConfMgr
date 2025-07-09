@@ -1,0 +1,81 @@
+# 新建 `~/.zshrc_custom` 文件存储所有自定义配置：
+
+# ~/.zshrc_custom
+# ============== 环境变量 ==============
+export EDITOR="vim"
+export JAVA_HOME="/opt/homebrew/opt/openjdk"
+
+# ============== 别名 ==============
+alias cls="clear"
+alias py='python3'
+alias python='python3'
+alias pip='pip3'
+alias mvn3='"/Applications/IntelliJ IDEA CE.app/Contents/plugins/maven/lib/maven3/bin/mvn"'
+
+alias proxy_on='export http_proxy=http://127.0.0.1:8080 https_proxy=$http_proxy'
+alias proxy_off='unset http_proxy https_proxy'
+
+
+# ============== Oh My Zsh 设置 ==============
+plugins=(git macos)
+
+# ============== 第三方工具 ==============
+# 1. pyenv 配置,python的版本控制，貌似没有用上，先注释掉
+#export PYENV_ROOT="$HOME/.pyenv"
+#command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+#eval "$(pyenv init -)"
+
+# 2. nvm 配置
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  
+# tabtab source for electron-forge package
+# uninstall by removing these lines or running `tabtab uninstall electron-forge`
+[[ -f /Users/zhaoq0103/.nvm/versions/node/v20.10.0/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /Users/zhaoq0103/.nvm/versions/node/v20.10.0/lib/node_modules/electron-forge/node_modules/tabtab/.completions/electron-forge.zsh
+
+
+# 3.  ssh配置 
+# 启动 ssh-agent
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  eval "$(ssh-agent -s)"
+fi
+
+# 配置参考
+# ~/.ssh/config                                                                                                                                                                                                                                                 ──(Thu,Jul03)─┘
+# # config file 这里是要配置私钥
+# Host github-ontheway  #这里github-ontheway 是别名，是有用的，可以用来区分多个不同的账号和仓库等
+#   HostName github.com
+#   User git 
+#   IdentityFile ~/.ssh/id-ed25519-github-ontheway # 更新路径
+#   IdentitiesOnly yes
+# 
+# Host github-zhaoq0103  
+#   HostName github.com
+#   User git 
+#   IdentityFile ~/.ssh/id-ed25519-github-zhaoq0103 # 更新路径
+#   IdentitiesOnly yes
+# 
+# Host  myvpn 
+#   HostName 43.159.38.35 
+#   User ubuntu 
+#   IdentityFile ~/.ssh/id_ed25519_tencentubun24_server # 更新路径
+
+
+# 4.  一些开发工具配置 
+# Created by `pipx` on 2025-04-14 09:29:14
+export PATH="$PATH:$HOME/.local/bin"
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/zhaoq0103/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+#6.
+# 本地独有配置
+[ -f ~/.zshrc_local ] && source ~/.zshrc_local
+#export OPENAI_API_KEY=sk-d69cf8f4e2064a22b1a09440e2a71ea2
+#export GEMINI_API_KEY="AIzaSyDA4sjGgQc0-JSTScMbZChPOl-ZMur3dvg"
+

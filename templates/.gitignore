@@ -52,7 +52,9 @@ log/
 .atom/
 .brackets.json
 
-# Node.js
+l
+Node.js
+
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -107,7 +109,7 @@ go.work
 /target/
 Cargo.lock
 
-# 用户输入文件（根据用户规则）
+# 用户输入文件
 userinput.py
 
 # dotconfEx 相关文件
@@ -115,12 +117,51 @@ userinput.py
 .dotconf_backups/
 .dotfiles/
 
-# 用户自定义配置（可选）
-# 如果用户想要跟踪自己的配置文件，可以取消注释
-# configs/.zshrc_custom
-# configs/.gitconfig_local
-
 # 其他
 *.pid
 *.seed
-*.pid.lock 
+*.pid.lock
+
+# 用户目录下的其他文件
+Applications/
+Desktop/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
+Public/
+Virtual Machines.localized/
+VirtualBox VMs/
+*.avi
+*.docx
+*.bin
+*.tar
+*.sh
+*.txt
+*.json
+*.xml
+*.yml
+*.yaml
+*.conf
+*.config
+*.cfg
+*.ini
+*.properties
+*.env
+*.local
+*.session
+*.history
+*.dump
+*.zwc
+*.bak
+*.old
+*.orig
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+\#*#
