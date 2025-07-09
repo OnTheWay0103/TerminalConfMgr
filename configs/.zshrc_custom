@@ -12,6 +12,8 @@ alias python='python3'
 alias pip='pip3'
 alias mvn3='"/Applications/IntelliJ IDEA CE.app/Contents/plugins/maven/lib/maven3/bin/mvn"'
 
+alias gac="git add . && git commit -m"
+
 alias proxy_on='export http_proxy=http://127.0.0.1:8080 https_proxy=$http_proxy'
 alias proxy_off='unset http_proxy https_proxy'
 
@@ -78,4 +80,18 @@ compinit
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
 #export OPENAI_API_KEY=sk-d69cf8f4e2064a22b1a09440e2a71ea2
 #export GEMINI_API_KEY="AIzaSyDA4sjGgQc0-JSTScMbZChPOl-ZMur3dvg"
+# pce() {  # python code env 缩写
+#     local env_path="${1:-$HOME/DEV/code-ontheway/myenv}"
+#     
+#     if [ ! -d "$env_path" ]; then
+#         python3 -m venv "$env_path"
+#         echo "✅ Created virtual env: $env_path"
+#     fi
+#     
+#     source "$env_path/bin/activate" && echo "🔋 Virtual env activated"
+# }
+# 
+# pde() {  # python deactivate env 缩写
+#     deactivate && echo "🛑 Virtual env deactivated"
+# }
 
