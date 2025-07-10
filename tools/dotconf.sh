@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Terminal Configuration Manager v2.3 - Single Repository Design
+# Terminal Configuration Manager v2.4 - Single Repository Design
 # 兼容 bash 和 zsh 环境，优先使用 bash 确保最佳兼容性
 
 # 配置变量
 DOTFILES_REPO="${DOTFILES_DIR:-$HOME/.dotfiles}"
 LOG_FILE="${HOME}/.dotconf.log"
 BACKUP_DIR="${HOME}/.dotconf_backups"
-VERSION="2.3"
+VERSION="2.4"
 
 # 颜色定义
 RED='\033[0;31m'
@@ -598,7 +598,7 @@ remove_file() {
 
 # 显示状态
 show_status() {
-    echo -e "\n${BLUE}=== Dotconf 状态 ===${NC}"
+    echo -e "\n${BLUE}=== Dotf 状态 ===${NC}"
     echo -e "版本: $VERSION"
     echo -e "仓库: $DOTFILES_REPO"
     
@@ -633,7 +633,7 @@ show_status() {
 
 # 显示帮助
 show_help() {
-    echo -e "${BLUE}Terminal Configuration Manager v$VERSION${NC}\n"
+    echo -e "${BLUE}Terminal Configuration Manager (dotf) v$VERSION${NC}\n"
     echo "单仓库设计 - 简化配置文件管理"
     echo ""
     echo "命令:"
@@ -654,9 +654,9 @@ show_help() {
     echo "  $0 migrate <URL>           # 新机器"
     echo ""
     echo "远程同步:"
-    echo "  1. dotconf init            # 初始化"
-    echo "  2. dotconf remote <URL>    # 配置远程"
-    echo "  3. dotconf sync            # 同步更改"
+    echo "  1. dotf init               # 初始化"
+    echo "  2. dotf remote <URL>       # 配置远程"
+    echo "  3. dotf sync               # 同步更改"
     echo ""
     echo "特点:"
     echo "  - 单仓库管理"

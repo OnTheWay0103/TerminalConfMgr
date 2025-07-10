@@ -19,4 +19,6 @@ source $ZSH/oh-my-zsh.sh
 echo "ZSH CONFIG LOADED"
 
 # ----------------------------------------------------------------------
-alias dotf='/usr/bin/git --git-dir=/Users/zhaoq0103/.dotfiles --work-tree=$HOME'
+# 使用 dotf 命令管理配置文件（已通过 install.sh 安装）
+# 如果需要直接使用 git 操作，可以使用以下别名：
+# alias dotf_git='/usr/bin/git --git-dir=/Users/zhaoq0103/.dotfiles --work-tree=$HOME'

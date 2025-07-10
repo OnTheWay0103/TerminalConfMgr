@@ -2,7 +2,7 @@
 
 ## 概述
 
-DotconfEx 支持将配置文件同步到远程 Git 仓库（如 GitHub、GitLab 等），实现多设备间的配置同步。
+Dotf 支持将配置文件同步到远程 Git 仓库（如 GitHub、GitLab 等），实现多设备间的配置同步。
 
 ## 快速开始
 
@@ -10,7 +10,7 @@ DotconfEx 支持将配置文件同步到远程 Git 仓库（如 GitHub、GitLab 
 
 ```bash
 # 初始化本地仓库
-dotconf init
+dotf init
 
 # 在初始化过程中，会提示输入远程仓库 URL
 # 例如: https://github.com/yourusername/dotfiles.git
@@ -35,7 +35,7 @@ git push -u origin main
 
 ```bash
 # 自动同步（拉取 + 推送）
-dotconf sync
+dotf sync
 
 # 或者手动操作
 cd ~/.dotfiles
@@ -67,8 +67,8 @@ git push origin main
 ### 步骤 2: 配置本地仓库
 
 ```bash
-# 方法 1: 使用 dotconf init（推荐）
-dotconf init
+# 方法 1: 使用 dotf init（推荐）
+dotf init
 
 # 方法 2: 手动配置
 cd ~/.dotfiles
@@ -81,20 +81,20 @@ git push -u origin main
 
 ```bash
 # 添加单个文件
-dotconf add .zshrc
+dotf add .zshrc
 
 # 添加目录
-dotconf add .config/nvim/
+dotf add .config/nvim/
 
 # 查看状态
-dotconf status
+dotf status
 ```
 
 ### 步骤 4: 同步到远程
 
 ```bash
 # 自动同步（推荐）
-dotconf sync
+dotf sync
 
 # 手动同步
 cd ~/.dotfiles
@@ -109,7 +109,7 @@ git push origin main
 
 ```bash
 # 克隆远程仓库到本地
-dotconf migrate https://github.com/yourusername/dotfiles.git
+dotf migrate https://github.com/yourusername/dotfiles.git
 ```
 
 ### 方法 2: 手动克隆
@@ -120,7 +120,7 @@ git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
 
 # 创建符号链接
 cd ~/.dotfiles
-./dotconfEx.sh init
+./dotconf.sh init
 ```
 
 ## 高级功能
@@ -155,9 +155,9 @@ git push origin v1.0.0
 
 ```bash
 # 添加到 shell 配置文件
-alias dotsync='dotconf sync'
-alias dotstatus='dotconf status'
-alias dotadd='dotconf add'
+alias dotsync='dotf sync'
+alias dotstatus='dotf status'
+alias dotadd='dotf add'
 ```
 
 ## 常见问题
@@ -231,29 +231,29 @@ git clone --mirror https://github.com/yourusername/dotfiles.git dotfiles-backup
 
 ```bash
 # 1. 检查状态
-dotconf status
+dotf status
 
 # 2. 添加新配置
-dotconf add .config/alacritty/alacritty.yml
+dotf add .config/alacritty/alacritty.yml
 
 # 3. 同步到远程
-dotconf sync
+dotf sync
 
 # 4. 验证同步
-dotconf status
+dotf status
 ```
 
 ### 新设备设置流程
 
 ```bash
-# 1. 安装 dotconf
-curl -fsSL https://raw.githubusercontent.com/yourusername/dotconf/main/install.sh | bash
+# 1. 安装 dotf
+curl -fsSL https://raw.githubusercontent.com/yourusername/dotf/main/install.sh | bash
 
 # 2. 迁移配置
-dotconf migrate https://github.com/yourusername/dotfiles.git
+dotf migrate https://github.com/yourusername/dotfiles.git
 
 # 3. 验证安装
-dotconf status
+dotf status
 ```
 
 ## 故障排除

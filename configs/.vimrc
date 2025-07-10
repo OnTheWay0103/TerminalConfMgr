@@ -1,4 +1,4 @@
-" Vim Configuration - DotconfEx Single Repository Design
+" Vim Configuration - Dotf Single Repository Design
 " 这个文件是示例配置，实际使用时会被符号链接到 ~/.vimrc
 
 set nocompatible

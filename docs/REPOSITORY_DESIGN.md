@@ -9,7 +9,7 @@
 ### 现有问题
 
 1. **双仓库结构**：
-   - 工具仓库：包含 `install.sh`、`dotconfEx.sh` 等工具
+   - 工具仓库：包含 `install.sh`、`dotconf.sh` 等工具
    - 用户仓库：`~/.dotfiles` 包含用户配置文件
 2. **部署复杂**：
    - 需要先克隆工具仓库
@@ -33,7 +33,7 @@
 dotfiles/
 ├── tools/                    # 工具脚本目录
 │   ├── install.sh           # 安装脚本
-│   ├── dotconfEx.sh         # 主工具脚本
+│   ├── dotconf.sh           # 主工具脚本
 │   └── demo_remote_sync.sh  # 演示脚本
 ├── configs/                  # 配置文件目录
 │   ├── shell/               # Shell 配置
@@ -66,7 +66,7 @@ dotfiles/
 
 ### 方案 1: 重构现有工具（推荐）
 
-1. **修改 `dotconfEx.sh`**：
+1. **修改 `dotconf.sh`**：
 
    - 不再创建独立的 `~/.dotfiles` 仓库
    - 直接在当前仓库中管理配置文件
@@ -87,7 +87,7 @@ dotfiles/
 1. **当前设计**：
 
    - 工具仓库 + 用户仓库
-   - 通过 `dotconfEx.sh` 管理用户仓库
+   - 通过 `dotconf.sh` 管理用户仓库
 
 2. **改进点**：
    - 优化工具仓库结构
@@ -104,7 +104,7 @@ mkdir -p tools configs docs templates scripts
 
 # 移动文件到对应目录
 mv install.sh tools/
-mv dotconfEx.sh tools/
+mv dotconf.sh tools/
 mv demo_remote_sync.sh tools/
 mv README.md docs/
 mv COMPATIBILITY.md docs/
@@ -118,7 +118,7 @@ mv REMOTE_SYNC.md docs/
    - 安装工具到系统 PATH
    - 创建符号链接到配置文件
 
-2. **更新 `tools/dotconfEx.sh`**：
+2. **更新 `tools/dotconf.sh`**：
    - 配置文件路径改为 `configs/`
    - 符号链接指向当前仓库
 
@@ -144,20 +144,20 @@ cd dotfiles
 ./tools/install.sh
 
 # 3. 初始化配置
-dotconf init
+dotf init
 
 # 4. 自定义配置
 # 编辑 configs/ 目录下的文件
 
 # 5. 同步到远程
-dotconf sync
+dotf sync
 ```
 
 ### 现有用户迁移流程
 
 ```bash
 # 1. 备份现有配置
-dotconf backup
+dotf backup
 
 # 2. 克隆新仓库
 git clone https://github.com/yourusername/dotfiles.git
@@ -167,7 +167,7 @@ cd dotfiles
 ./scripts/migrate.sh
 
 # 4. 验证配置
-dotconf status
+dotf status
 ```
 
 ## 优势对比
@@ -191,7 +191,7 @@ dotconf status
 ### 阶段 2: 重构工具
 
 - [ ] 修改 install.sh
-- [ ] 修改 dotconfEx.sh
+- [ ] 修改 dotconf.sh
 - [ ] 创建配置模板
 
 ### 阶段 3: 测试验证

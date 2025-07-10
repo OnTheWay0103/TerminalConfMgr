@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# DotconfEx 一键安装脚本 - 单仓库设计
+# Dotf 一键安装脚本 - 单仓库设计
 # 兼容 bash 和 zsh 环境
 # 参考 Mathias Bynens dotfiles 的 bootstrap.sh 设计
 
 set -e
 
 DOTFILES_REPO="${DOTFILES_DIR:-$HOME/.dotfiles}"
-DOTCONF_SCRIPT="dotconfEx.sh"
+DOTCONF_SCRIPT="dotconf.sh"
 
 # 颜色定义
 RED='\033[0;31m'
@@ -111,7 +111,7 @@ get_shell_config() {
     echo "$config_file"
 }
 
-# 安装 dotconfEx
+# 安装 dotf
 install_dotconf() {
     local script_dir="$(get_script_dir)"
     local script_path="$script_dir/$DOTCONF_SCRIPT"
@@ -132,7 +132,7 @@ install_dotconf() {
         mkdir -p "$target_dir"
     fi
     
-    local target="$target_dir/dotconf"
+    local target="$target_dir/dotf"
     if [ -L "$target" ]; then
         rm "$target"
     fi
@@ -149,7 +149,7 @@ install_dotconf() {
             # 检查是否已经添加过
             if ! grep -q "export PATH.*$target_dir" "$shell_config" 2>/dev/null; then
                 echo "" >> "$shell_config"
-                echo "# DotconfEx PATH" >> "$shell_config"
+                echo "# Dotf PATH" >> "$shell_config"
                 echo "export PATH=\"$target_dir:\$PATH\"" >> "$shell_config"
                 log "已添加 $target_dir 到 $shell_config"
             else
@@ -177,8 +177,8 @@ init_dotfiles() {
     fi
     
     # 运行初始化
-    if command -v dotconf >/dev/null 2>&1; then
-        dotconf init
+    if command -v dotf >/dev/null 2>&1; then
+        dotf init
     else
         "$(get_script_dir)/$DOTCONF_SCRIPT" init
     fi
@@ -186,7 +186,7 @@ init_dotfiles() {
 
 # 显示使用说明
 show_usage() {
-    echo -e "${BLUE}DotconfEx 安装脚本 - 单仓库设计${NC}"
+    echo -e "${BLUE}Dotf 安装脚本 - 单仓库设计${NC}"
     echo ""
     echo "用法: $0 [选项]"
     echo ""
@@ -236,7 +236,7 @@ main() {
         esac
     done
     
-    log "开始安装 DotconfEx (单仓库设计)..."
+    log "开始安装 Dotf (单仓库设计)..."
     log "检测到 shell: $(detect_shell)"
     
     # 检查依赖
@@ -260,8 +260,8 @@ main() {
     else
         echo "1. 重新加载 shell 或重启终端"
     fi
-    echo "2. 使用命令: dotconf --help"
-    echo "3. 查看状态: dotconf status"
+    echo "2. 使用命令: dotf --help"
+    echo "3. 查看状态: dotf status"
     echo ""
     echo -e "${BLUE}单仓库设计优势：${NC}"
     echo "• 只需要一个仓库管理所有配置"

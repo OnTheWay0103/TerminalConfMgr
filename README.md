@@ -1,4 +1,4 @@
-# Terminal Configuration Manager (dotconfEx)
+# Terminal Configuration Manager (dotf)
 
 一个简单易用的跨平台配置文件同步工具，采用**单仓库设计**，帮助您在多台电脑间保持配置文件一致。参考了 [Mathias Bynens dotfiles](https://github.com/mathiasbynens/dotfiles) 的设计理念。
 
@@ -22,15 +22,15 @@
 
 ```bash
 # 下载并运行安装脚本
-curl -fsSL https://raw.githubusercontent.com/your-repo/dotconfEx.sh/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/your-repo/dotf/main/install.sh | bash
 ```
 
 或者手动安装：
 
 ```bash
 # 下载脚本
-curl -o dotconfEx.sh https://raw.githubusercontent.com/your-repo/dotconfEx.sh/main/dotconfEx.sh
-chmod +x dotconfEx.sh
+curl -o dotconf.sh https://raw.githubusercontent.com/your-repo/dotf/main/dotconf.sh
+chmod +x dotconf.sh
 
 # 运行安装
 ./install.sh
@@ -39,7 +39,7 @@ chmod +x dotconfEx.sh
 ### 2. 首次设置
 
 ```bash
-dotconf init
+dotf init
 ```
 
 脚本会引导您：
@@ -52,7 +52,7 @@ dotconf init
 ### 3. 在新机器上同步
 
 ```bash
-dotconf migrate <your-repo-url>
+dotf migrate <your-repo-url>
 ```
 
 ## 常用命令
@@ -72,35 +72,35 @@ dotconf migrate <your-repo-url>
 
 ```bash
 # 1. 初始化仓库
-dotconf init
+dotf init
 
 # 2. 添加更多配置文件
-dotconf add .config/nvim/init.vim
-dotconf add .tmux.conf
+dotf add .config/nvim/init.vim
+dotf add .tmux.conf
 
 # 3. 同步到远程
-dotconf sync
+dotf sync
 ```
 
 ### 场景 2: 新机器配置
 
 ```bash
 # 1. 克隆配置
-dotconf migrate https://github.com/username/dotfiles.git
+dotf migrate https://github.com/username/dotfiles.git
 
 # 2. 检查状态
-dotconf status
+dotf status
 ```
 
 ### 场景 3: 日常使用
 
 ```bash
 # 1. 修改配置文件后同步
-dotconf sync
+dotf sync
 
 # 2. 添加新配置
-dotconf add .config/alacritty/alacritty.yml
-dotconf sync
+dotf add .config/alacritty/alacritty.yml
+dotf sync
 ```
 
 ## 工作原理
@@ -150,7 +150,7 @@ dotconf sync
 ls -la ~/.zshrc
 
 # 重新创建符号链接
-dotconf init
+dotf init
 ```
 
 ### 问题 2: 同步冲突
@@ -163,7 +163,7 @@ git status
 # 2. 手动解决冲突后
 git add .
 git commit -m "解决冲突"
-dotconf sync
+dotf sync
 ```
 
 ### 问题 3: 远程仓库连接失败
@@ -180,7 +180,7 @@ git remote add origin <your-repo-url>
 
 ## 与 Mathias Bynens dotfiles 的对比
 
-| 特性     | Mathias dotfiles | dotconfEx (单仓库)    |
+| 特性     | Mathias dotfiles | dotf (单仓库)         |
 | -------- | ---------------- | --------------------- |
 | 安装方式 | bootstrap.sh     | install.sh + 一键安装 |
 | 文件组织 | 直接管理         | 单仓库 + 符号链接     |

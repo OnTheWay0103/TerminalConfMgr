@@ -1,8 +1,8 @@
-# DotconfEx 兼容性说明
+# Dotf 兼容性说明
 
 ## 概述
 
-DotconfEx 已优化以支持多种 shell 环境，特别是针对 macOS 系统从 bash 迁移到 zsh 的情况。
+Dotf 已优化以支持多种 shell 环境，特别是针对 macOS 系统从 bash 迁移到 zsh 的情况。
 
 ## 兼容性改进
 
