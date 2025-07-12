@@ -103,4 +103,7 @@ compinit
 # pde() {  # python deactivate env 缩写
 #     deactivate && echo "🛑 Virtual env deactivated"
 # }
-
+# /usr/libexec/java_home -V
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8) && java -version
+# # brew install --cask android-studio
+# export JAVA_HOME=$(/usr/libexec/java_home -v 1.8) && export ANDROID_SDK_ROOT=~/Library/Android/sdk && export ANDROID_HOME=~/Library/Android/sdk && export PATH=$PATH:~/Library/Android/sdk/platform-tools
