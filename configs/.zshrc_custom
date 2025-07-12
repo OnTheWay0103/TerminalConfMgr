@@ -52,6 +52,8 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
   eval "$(ssh-agent -s)"
 fi
 
+ssh-add ~/.ssh/id-ed25519-github-ontheway ~/.ssh/id_ed25519_github-zhaoq
+
 # 配置参考
 # ~/.ssh/config                                                                                                                                                                                                                                                 ──(Thu,Jul03)─┘
 # # config file 这里是要配置私钥
