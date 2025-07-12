@@ -52,7 +52,7 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
   eval "$(ssh-agent -s)"
 fi
 
-ssh-add ~/.ssh/id-ed25519-github-ontheway ~/.ssh/id_ed25519_github-zhaoq
+# SSH密钥加载已移动到 ~/.zshrc_local（机器特定配置）
 
 # 配置参考
 # ~/.ssh/config                                                                                                                                                                                                                                                 ──(Thu,Jul03)─┘
