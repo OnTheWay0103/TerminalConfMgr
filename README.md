@@ -1,226 +1,131 @@
-# Terminal Configuration Manager (dotf)
+# TerminalConfigMgr
 
-一个简单易用的跨平台配置文件同步工具，采用**单仓库设计**，帮助您在多台电脑间保持配置文件一致。参考了 [Mathias Bynens dotfiles](https://github.com/mathiasbynens/dotfiles) 的设计理念。
+一个安全、可靠的终端配置文件管理系统。
 
-## 🎯 设计理念
+## 🚀 快速开始
 
-**单仓库设计** - 只需要一个 Git 仓库管理所有配置文件，通过符号链接自动管理，大大简化了使用复杂度。
-
-## 功能特点
-
-- 🚀 **单仓库管理**: 只需要一个仓库，简化使用
-- 🔗 **自动符号链接**: 自动创建和管理符号链接
-- 🔄 **智能同步**: 支持本地到远程的自动同步
-- 🛡️ **冲突处理**: 智能处理多设备间的配置冲突
-- 📦 **备份恢复**: 自动备份和恢复功能
-- 🎨 **配置模板**: 提供常用配置文件模板
-- 🌐 **跨平台**: 支持 macOS 和 Linux
-
-## 快速开始
-
-### 1. 一键安装
-
+### 1. 首次安装
 ```bash
-# 下载并运行安装脚本
-curl -fsSL https://raw.githubusercontent.com/your-repo/dotf/main/install.sh | bash
-```
-
-或者手动安装：
-
-```bash
-# 下载脚本
-curl -o dotconf.sh https://raw.githubusercontent.com/your-repo/dotf/main/dotconf.sh
-chmod +x dotconf.sh
-
-# 运行安装
-./install.sh
-```
-
-### 2. 首次设置
-
-```bash
-dotf init
-```
-
-脚本会引导您：
-
-- 创建本地 dotfiles 仓库
-- 配置远程仓库（可选）
-- 创建基础配置文件
-- 自动创建符号链接
-
-### 3. 在新机器上同步
-
-```bash
-dotf migrate <your-repo-url>
-```
-
-## 常用命令
-
-| 命令            | 说明                   |
-| --------------- | ---------------------- |
-| `init`          | 初始化 dotfiles 仓库   |
-| `sync`          | 同步配置更改到远程仓库 |
-| `migrate <URL>` | 在新机器上克隆配置     |
-| `add <file>`    | 添加文件到跟踪         |
-| `remove <file>` | 从跟踪中移除文件       |
-| `status`        | 显示当前状态           |
-
-## 使用场景
-
-### 场景 1: 首次设置
-
-```bash
-# 1. 初始化仓库
-dotf init
-
-# 2. 添加更多配置文件
-dotf add .config/nvim/init.vim
-dotf add .tmux.conf
-
-# 3. 同步到远程
-dotf sync
-```
-
-### 场景 2: 新机器配置
-
-```bash
-# 1. 克隆配置
-dotf migrate https://github.com/username/dotfiles.git
-
-# 2. 检查状态
-dotf status
-```
-
-### 场景 3: 日常使用
-
-```bash
-# 1. 修改配置文件后同步
-dotf sync
-
-# 2. 添加新配置
-dotf add .config/alacritty/alacritty.yml
-dotf sync
-```
-
-## 工作原理
-
-### 单仓库设计
-
-```
-~/.dotfiles/           # Git 仓库
-├── .zshrc            # 配置文件
-├── .gitconfig        # Git 配置
-├── .vimrc            # Vim 配置
-└── .config/          # 配置目录
-    └── nvim/
-        └── init.vim
-
-~/.zshrc -> ~/.dotfiles/.zshrc        # 符号链接
-~/.gitconfig -> ~/.dotfiles/.gitconfig # 符号链接
-~/.vimrc -> ~/.dotfiles/.vimrc        # 符号链接
-```
-
-### 优势
-
-1. **简单直观**: 只需要一个仓库管理所有配置
-2. **自动管理**: 符号链接自动创建和维护
-3. **版本控制**: 所有配置都在 Git 版本控制下
-4. **易于同步**: 简单的 push/pull 操作
-5. **冲突处理**: 自动检测和处理冲突
-
-## 支持的配置文件
-
-- Shell 配置: `.zshrc`, `.bashrc`, `.bash_profile`
-- 编辑器配置: `.vimrc`, `.config/nvim/init.vim`
-- 终端配置: `.tmux.conf`, `.config/alacritty/`
-- Git 配置: `.gitconfig`
-- 其他: `.ssh/config`, `.config/` 目录下的配置
-
-## 环境变量
-
-- `DOTFILES_DIR`: 自定义 dotfiles 仓库路径（默认: `~/.dotfiles`）
-
-## 故障排除
-
-### 问题 1: 符号链接问题
-
-```bash
-# 检查符号链接
-ls -la ~/.zshrc
-
-# 重新创建符号链接
-dotf init
-```
-
-### 问题 2: 同步冲突
-
-```bash
-# 1. 查看冲突状态
+# 克隆仓库
+git clone https://github.com/yourusername/TerminalConfigMgr.git ~/.dotfiles
 cd ~/.dotfiles
-git status
 
-# 2. 手动解决冲突后
-git add .
-git commit -m "解决冲突"
-dotf sync
+# 安全部署配置
+./tools/core.sh check   # 系统检查
+./tools/core.sh deploy  # 部署配置
 ```
 
-### 问题 3: 远程仓库连接失败
-
+### 2. 日常使用
 ```bash
-# 检查远程仓库配置
-cd ~/.dotfiles
-git remote -v
+# 查看帮助
+./tools/core.sh help
 
-# 重新配置远程仓库
-git remote remove origin
-git remote add origin <your-repo-url>
+# 恢复原始配置
+./tools/core.sh restore
 ```
 
-## 与 Mathias Bynens dotfiles 的对比
+## 📁 项目结构
 
-| 特性     | Mathias dotfiles | dotf (单仓库)         |
-| -------- | ---------------- | --------------------- |
-| 安装方式 | bootstrap.sh     | install.sh + 一键安装 |
-| 文件组织 | 直接管理         | 单仓库 + 符号链接     |
-| 同步机制 | 手动更新         | 自动同步              |
-| 复杂度   | 中等             | 简单                  |
-| 学习曲线 | 较陡             | 平缓                  |
+```
+TerminalConfigMgr/
+├── configs/              # 配置文件
+│   ├── .zshrc           # Zsh配置
+│   ├── .bashrc          # Bash配置
+│   ├── .vimrc           # Vim配置
+│   ├── .gitconfig       # Git配置
+│   └── .gitignore_global # 全局忽略规则
+├── tools/               # 工具脚本
+│   ├── core.sh          # 核心功能（部署/恢复）
+│   ├── security_check.sh # 安全检查
+│   ├── safe_deploy.sh   # 安全部署
+│   └── enhanced_backup.sh # 增强备份
+├── templates/           # 配置模板
+└── docs/               # 文档
+```
 
-## 设计优势
+## 🔧 核心功能
 
-### 跨平台兼容性
+### 安全部署
+- ✅ 自动备份现有配置
+- ✅ 安全检查
+- ✅ 系统兼容性验证
+- ✅ 一键恢复
 
-| 特性       | 支持情况                    | 说明           |
-| ---------- | --------------------------- | -------------- |
-| Shell 环境 | bash, zsh                   | 自动检测并适配 |
-| 操作系统   | macOS, Linux, Windows (WSL) | 跨平台兼容     |
-| 配置文件   | 自动检测 .zshrc/.bashrc     | 智能配置 PATH  |
-| 权限处理   | 自动降级到用户目录          | 避免权限问题   |
+### 备份系统
+- ✅ 完整系统快照
+- ✅ 智能恢复
+- ✅ 差异备份
+- ✅ 自动清理
 
-### 相比 Bare Git 仓库方案
+### 跨平台支持
+- ✅ macOS
+- ✅ Linux
+- ✅ WSL
 
-| 方面       | Bare Git 仓库        | 单仓库设计 |
-| ---------- | -------------------- | ---------- |
-| 仓库数量   | 2 个 (bare + remote) | 1 个       |
-| 配置复杂度 | 高                   | 低         |
-| 学习成本   | 高                   | 低         |
-| 维护难度   | 高                   | 低         |
-| 直观性     | 低                   | 高         |
+## 📋 使用指南
 
-### 相比传统方案
+### 添加新配置
+1. 将配置文件放入 `configs/` 目录
+2. 运行 `./tools/core.sh deploy`
 
-- ✅ **简单**: 只需要一个仓库
-- ✅ **直观**: 文件组织清晰
-- ✅ **自动**: 符号链接自动管理
-- ✅ **安全**: 自动备份原文件
-- ✅ **灵活**: 支持任意配置文件
+### 备份管理
+```bash
+# 创建系统快照
+./tools/enhanced_backup.sh snapshot
 
-## 贡献
+# 列出备份
+./tools/enhanced_backup.sh list
 
-欢迎提交 Issue 和 Pull Request！
+# 恢复到指定快照
+./tools/enhanced_backup.sh restore snapshot_YYYYMMDD_HHMMSS
+```
 
-## 许可证
+### 安全检查
+```bash
+./tools/security_check.sh
+```
 
-MIT License
+## 🛡️ 安全特性
+
+- **敏感数据检测**：自动扫描API密钥和密码
+- **文件权限验证**：确保配置文件安全权限
+- **备份验证**：完整性检查
+- **系统快照**：部署前自动创建恢复点
+
+## 🆘 故障排除
+
+### 恢复误操作
+```bash
+# 查看可用备份
+./tools/enhanced_backup.sh list
+
+# 紧急回滚
+./tools/enhanced_backup.sh rollback
+```
+
+### 系统检查失败
+```bash
+# 重新检查系统
+./tools/core.sh check
+```
+
+## 📚 文档
+
+- [兼容性指南](docs/COMPATIBILITY.md)
+- [远程同步](docs/REMOTE_SYNC.md)
+- [仓库设计](docs/REPOSITORY_DESIGN.md)
+
+## 🎯 最佳实践
+
+1. **定期备份**：每周运行一次快照
+2. **测试环境**：先在测试环境验证配置
+3. **版本控制**：使用Git管理配置变更
+4. **环境分离**：工作/个人配置分离
+
+## 🔍 调试
+
+所有操作日志保存在：`~/.dotconf.log`
+
+## 🤝 贡献
+
+欢迎提交Issue和Pull Request！
