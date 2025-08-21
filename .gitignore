@@ -124,3 +124,5 @@ userinput.py
 *.pid
 *.seed
 *.pid.lock 
+
+.claude/
