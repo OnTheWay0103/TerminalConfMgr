@@ -13,6 +13,7 @@ CONFIG_MAP=(
     "configs/.zshrc_custom:${HOME}/.zshrc_custom"
     "configs/.vimrc:${HOME}/.vimrc"
     "configs/.gitconfig:${HOME}/.gitconfig"
+    "configs/.gitignore_global:${HOME}/.gitignore_global"
 )
 
 # 安装单个配置文件

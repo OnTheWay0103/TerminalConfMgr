@@ -25,6 +25,7 @@
     ca = commit -a
     cm = commit -m
     di = diff
+    gac="git add . && git commit -m"
     unstage = reset HEAD --
     last = log -1 HEAD
     visual = !gitk
