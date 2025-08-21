@@ -89,8 +89,6 @@ compinit
 #6.
 # 本地独有配置
 [ -f ~/.zshrc_local ] && source ~/.zshrc_local
-#export OPENAI_API_KEY=sk-d69cf8f4e2064a22b1a09440e2a71ea2
-#export GEMINI_API_KEY="AIzaSyDA4sjGgQc0-JSTScMbZChPOl-ZMur3dvg"
 # pce() {  # python code env 缩写
 #     local env_path="${1:-$HOME/DEV/code-ontheway/myenv}"
 #     
