@@ -61,6 +61,8 @@ fi
 #   User ubuntu 
 #   IdentityFile ~/.ssh/id_ed25519_tencentubun24_server # 更新路径
 
+# SSH密钥自动加载（机器特定配置）
+ssh-add ~/.ssh/id-ed25519-github-ontheway ~/.ssh/id_ed25519_github-zhaoq
 
 # 4.  一些开发工具配置 
 # Created by `pipx` on 2025-04-14 09:29:14
